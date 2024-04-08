@@ -1,3 +1,6 @@
+# Note
+This repository only incorporates OGGEncoder from the fork source Swift-Ogg. All other features have been removed.
+
 # swift-ogg
 This library provides a very simple API to convert between `opus/ogg` and `MPEG4AAC/m4a` files.
 It uses opus's `libopus` `libogg` to convert between `opus/ogg` and linear PCM audio data and native iOS apis to convert between PCM and `MPEG4AAC/m4a`(but could be very easily adapted to use any other codec/container supported by iOS).
