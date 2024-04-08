@@ -1,4 +1,0 @@
-module Copustools [system] {
-  header "opus_header.h"
-  export *
-}

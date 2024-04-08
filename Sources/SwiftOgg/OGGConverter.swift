@@ -26,34 +26,6 @@ public enum OGGConverterError: Error {
 
 public class OGGConverter {
 
-    public static func convertOpusOGGToM4aFile(src: URL, dest: URL) throws {
-        do {
-            let data = try Data(contentsOf: src)
-            let decoder = try OGGDecoder(audioData: data)
-            let layoutTag = decoder.numChannels == 1
-                ? kAudioChannelLayoutTag_Mono
-                : kAudioChannelLayoutTag_Stereo
-            guard let layout = AVAudioChannelLayout(layoutTag: layoutTag) else { throw OGGConverterError.failedToCreateAVAudioChannelLayout }
-            
-            let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: Double(decoder.sampleRate), interleaved: true, channelLayout: layout)
-            guard let buffer = decoder.pcmData.toPCMBuffer(format: format) else { throw OGGConverterError.failedToCreatePCMBuffer }
-            var settings: [String : Any] = [:]
-
-            settings[AVFormatIDKey] = kAudioFormatMPEG4AAC
-            settings[AVSampleRateKey] = buffer.format.sampleRate
-            settings[AVNumberOfChannelsKey] = buffer.format.channelCount
-            settings[AVLinearPCMIsFloatKey] = (buffer.format.commonFormat == .pcmFormatFloat32)
-
-            let destFile = try AVAudioFile(forWriting: dest, settings: settings, commonFormat: buffer.format.commonFormat, interleaved: buffer.format.isInterleaved)
-            try destFile.write(from: buffer)
-        } catch let error as OGGConverterError  {
-            throw error
-        } catch {
-            // wrap lower level errors
-            throw OGGConverterError.other(error)
-        }
-    }
-    
     public static func convertM4aFileToOpusOGG(src: URL, dest: URL) throws {
         do {
             let srcFile = try AVAudioFile(
